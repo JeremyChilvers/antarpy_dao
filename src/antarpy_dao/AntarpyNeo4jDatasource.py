@@ -254,6 +254,7 @@ class AntarpyNeo4jDatasource():
             return self._to_plain(rec.value())
         # Otherwise return the whole record as a dict, plainified.
         return self._to_plain(rec.data())        
+    
 
     def _execute_with_retry(self, tx_fn, query, dao_session, format, params, result_xform):
 
@@ -269,10 +270,19 @@ class AntarpyNeo4jDatasource():
         def as_list(r):         return list(r)
         def as_dict(r):         return [rec.data() for rec in r]
         def as_single(r):       return self.as_first(r)
-        def as_dataframe(r):    return pd.DataFrame([rec.data() for rec in r])
         def as_raw(r):          return r
         def as_json(r):         return json.dumps({"json": [rec.data() for rec in r]}, indent=2)
         
+        def as_dataframe(r):
+            try:
+                import pandas as pd
+            except ImportError as e:
+                raise ImportError(
+                    "DataFrame output requires pandas. Install with: "
+                    "pip install antarpy-dao[dataframe]"
+                ) from e
+            return pd.DataFrame([rec.data() for rec in r])
+
         transformers = {
             "LIST": as_list,
             "DICT": as_dict,

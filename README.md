@@ -1,4 +1,4 @@
-<img src="AntarPy full small.png"/>
+![Antarpy DAO](https://raw.githubusercontent.com/JeremyChilvers/antarpy_dao/main/AntarPy%20full%20small.png)
 <br>
 
 # ANTARPY DAO Neo4j Driver
@@ -200,6 +200,11 @@ def decrease_customer_balance(tx, customer_id, amount):
 Lets see Antarpy DAO Neo4j Driver in more detail below... 
 
 ## Quick Start
+### Installing
+```python
+pip install antarpy-dao
+```
+
 ### Creating the Datasource object
 Define your connection details - from somewhere....and consolidate as a Python Dictionary.
 ```python

@@ -1,0 +1,13 @@
+# (optional) clean old artifacts
+rm -rf dist build *.egg-info              # macOS/Linux
+# Windows PowerShell:
+# Remove-Item -Recurse -Force dist, build; Remove-Item -Force *.egg-info
+
+python -m pip install -U build twine
+python -m build                           # creates dist/*.whl and *.tar.gz
+
+# TestPyPI first (recommended)
+twine upload --repository testpypi dist/*
+
+# When happy, real PyPI:
+twine upload dist/*
