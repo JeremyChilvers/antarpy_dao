@@ -1,0 +1,1 @@
+docker run -i -t --name antarpy-flask antarpy-api

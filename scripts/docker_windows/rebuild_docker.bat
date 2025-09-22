@@ -1,0 +1,2 @@
+call kill_docker
+call build_docker

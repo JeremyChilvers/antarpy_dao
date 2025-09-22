@@ -1,0 +1,31 @@
+FROM python:3.13-alpine
+
+# Installation Directory
+WORKDIR /app
+
+RUN mkdir -p /app/bin/python && \
+    mkdir -p /app/python && \
+    mkdir -p /app/log && \
+    mkdir -p /app/ssl && \
+    chmod 777 /app/log 
+
+# Setup the Conda Environment
+COPY scripts/python/* /app/bin/python/
+
+RUN pip install -r /app/bin/python/pip_requirements.txt 
+
+# install dos2unix to clean up environment scripts
+RUN apk update && apk add dos2unix zsh
+
+COPY --chmod=777 scripts/ /app/bin
+RUN dos2unix /app/bin/.env
+#RUN echo 'source /app/bin/.env && cd /app/python && pytest -v --capture=tee-sys' >> /root/.zshrc
+RUN echo 'source /app/bin/.env && cd /app/python && pytest -v -s' >> /root/.zshrc
+
+COPY src/ /app/python
+RUN find /app/python -type f -print0 | xargs -0 dos2unix -- 
+
+ENV PATH=/usr/local/bin:/app/bin:$PATH
+
+# Start is in the Path
+ENTRYPOINT ["start.sh"]
